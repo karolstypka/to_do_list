@@ -21,24 +21,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({
+  HomePage({
     Key? key,
   }) : super(key: key);
+
+  final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('To do in 2022'),
+        title: const Text('To do list'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          FirebaseFirestore.instance.collection('categories').add(
+            {
+              'title': controller.text,
+            },
+          );
+          controller.clear();
+        },
         child: const Icon(Icons.add),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -50,16 +59,48 @@ class HomePage extends StatelessWidget {
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("Proszę czekać trwa ładowanie danych");
+              return const Text("Proszę czekać, trwa ładowanie danych");
             }
 
             final documents = snapshot.data!.docs;
 
             return ListView(
               children: [
-                CategoryWidget(documents[0]['title']),
-                CategoryWidget(documents[1]['title']),
-                CategoryWidget('Kategoria 3'),
+                for (final document in documents) ...[
+                  Dismissible(
+                    key: ValueKey(document.id),
+                    background: const DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 25.0),
+                          child: Icon(
+                            Icons.delete,
+                          ),
+                        ),
+                      ),
+                    ),
+                    confirmDismiss: (direction) async {
+                      // only from right to left
+                      return direction == DismissDirection.endToStart;
+                    },
+                    onDismissed: (direction) {
+                      FirebaseFirestore.instance
+                          .collection('categories')
+                          .doc(document.id)
+                          .delete();
+                    },
+                    child: CategoryWidget(
+                      document['title'],
+                    ),
+                  ),
+                ],
+                TextField(
+                  controller: controller,
+                ),
               ],
             );
           }),
@@ -78,10 +119,12 @@ class CategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 60,
+      width: 370,
       color: Colors.orange.shade700,
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.all(10),
-      child: Text(title),
+      child: Center(child: Text(title)),
     );
   }
 }
