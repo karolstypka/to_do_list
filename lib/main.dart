@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -40,13 +41,28 @@ class HomePage extends StatelessWidget {
         onPressed: () {},
         child: const Icon(Icons.add),
       ),
-      body: ListView(
-        children: const [
-          CategoryWidget('Kategoria 1'),
-          CategoryWidget('Kategoria 2'),
-          CategoryWidget('Kategoria 3'),
-        ],
-      ),
+      body: StreamBuilder<QuerySnapshot>(
+          stream:
+              FirebaseFirestore.instance.collection('categories').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Wystąpił nieoczekiwany problem');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text("Proszę czekać trwa ładowanie danych");
+            }
+
+            final documents = snapshot.data!.docs;
+
+            return ListView(
+              children: [
+                CategoryWidget(documents[0]['title']),
+                CategoryWidget(documents[1]['title']),
+                CategoryWidget('Kategoria 3'),
+              ],
+            );
+          }),
     );
   }
 }
