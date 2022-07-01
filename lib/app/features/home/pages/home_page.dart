@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_list/app/home/pages/cubit/home_cubit.dart';
-import 'package:to_do_list/features/auth/pages/user_profile.dart';
+import 'package:to_do_list/app/features/auth/pages/user_profile.dart';
 import 'package:to_do_list/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
