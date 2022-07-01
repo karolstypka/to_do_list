@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:to_do_list/features/auth/pages/user_profile.dart';
 import 'features/auth/pages/auth_gate.dart';
 import 'firebase_options.dart';
 
@@ -24,100 +22,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: const AuthGate(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  HomePage({
-    Key? key,
-  }) : super(key: key);
-
-  final controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('To do list'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const UserProfile(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.person),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          FirebaseFirestore.instance.collection('categories').add(
-            {
-              'title': controller.text,
-            },
-          );
-          controller.clear();
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('categories').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Wystąpił nieoczekiwany problem');
-            }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("Proszę czekać, trwa ładowanie danych");
-            }
-
-            final documents = snapshot.data!.docs;
-
-            return ListView(
-              children: [
-                for (final document in documents) ...[
-                  Dismissible(
-                    key: ValueKey(document.id),
-                    background: const DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                      ),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 25.0),
-                          child: Icon(
-                            Icons.delete,
-                          ),
-                        ),
-                      ),
-                    ),
-                    confirmDismiss: (direction) async {
-                      // only from right to left
-                      return direction == DismissDirection.endToStart;
-                    },
-                    onDismissed: (direction) {
-                      FirebaseFirestore.instance
-                          .collection('categories')
-                          .doc(document.id)
-                          .delete();
-                    },
-                    child: CategoryWidget(
-                      document['title'],
-                    ),
-                  ),
-                ],
-                TextField(
-                  controller: controller,
-                ),
-              ],
-            );
-          }),
     );
   }
 }
