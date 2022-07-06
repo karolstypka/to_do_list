@@ -1,5 +1,5 @@
 *.csharp linguist-detectable=false 
-*.c++ linguist-detectable=false 
+*.cplusplus linguist-detectable=false 
 *.java linguist-detectable=false  
 *.js linguist-detectable=false  
 *.html linguist-detectable=false  
