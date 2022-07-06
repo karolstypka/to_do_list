@@ -1,5 +1,8 @@
-*.c     text diff=dart
-*.cc    text diff=dart
-*.cxx   text diff=dart
-*.cpp   text diff=dart
-*.c++   text diff=dart
+*.cmake linguist-detectable=false 
+*.cc linguist-detectable=false 
+*.cpp linguist-detectable=false 
+*.java linguist-detectable=false  
+*.js linguist-detectable=false  
+*.html linguist-detectable=false  
+*.xml linguist-detectable=false
+*.dart linguist-detectable=true
