@@ -1,4 +1,4 @@
-*.cmd linguist-detectable=false 
+*.cpm linguist-detectable=false 
 *.cpp linguist-detectable=false 
 *.java linguist-detectable=false  
 *.js linguist-detectable=false  
