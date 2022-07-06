@@ -1,1 +1,5 @@
-static/* linguist-vendored
+*.c     text diff=dart
+*.cc    text diff=dart
+*.cxx   text diff=dart
+*.cpp   text diff=dart
+*.c++   text diff=dart
