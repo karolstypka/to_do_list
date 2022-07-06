@@ -1,4 +1,3 @@
-*.csharp linguist-detectable=false 
 *.cpp linguist-detectable=false 
 *.cmd linguist-detectable=false 
 *.java linguist-detectable=false  
