@@ -1,4 +1,4 @@
-*.csharp linguist-detectable=false 
+*.c++ linguist-detectable=false 
 *.CMake linguist-detectable=false 
 *.java linguist-detectable=false  
 *.js linguist-detectable=false  
